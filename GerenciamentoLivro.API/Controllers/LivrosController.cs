@@ -31,10 +31,9 @@ namespace GerenciamentoLivro.API.Controllers
             var livro = await _livroService.ObterLivro(titulo);
 
             if (livro is null)
-                return NotFound();
+                return CustomResponse(HttpStatusCode.NotFound);
 
             var response = (LivroResponse)livro;
-
             return CustomResponse(HttpStatusCode.OK, response);
         }
 
@@ -48,7 +47,6 @@ namespace GerenciamentoLivro.API.Controllers
             await _livroService.Adicionar(livro);
 
             var response = (LivroResponse)livro;
-
             return CustomResponse(HttpStatusCode.Created, response);
         }
 

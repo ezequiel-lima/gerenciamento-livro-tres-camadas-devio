@@ -11,13 +11,7 @@ namespace GerenciamentoLivro.API.Dtos.Requests
 
         public static explicit operator Livro(CreateLivroRequest request)
         {
-            return new Livro
-            {
-                Titulo = request.Titulo,
-                Autor = request.Autor,
-                Isbn = request.Isbn,
-                DataDePublicacao = request.DataDePublicacao
-            };
+            return new Livro(request.Titulo, request.Autor, request.Isbn, request.DataDePublicacao);
         }
     }
 }

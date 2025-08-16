@@ -37,10 +37,7 @@ namespace GerenciamentoLivro.Domain.Services
                 return;
             }
 
-            livroParaAtualizacao.Titulo = livro.Titulo;
-            livroParaAtualizacao.Autor = livro.Autor;
-            livroParaAtualizacao.Isbn = livro.Isbn;
-            livroParaAtualizacao.DataDePublicacao = livro.DataDePublicacao;
+            livroParaAtualizacao.AtualizarDados(livro.Titulo, livro.Autor, livro.Isbn, livro.DataDePublicacao);
 
             await _repository.Atualizar(livroParaAtualizacao);
         }

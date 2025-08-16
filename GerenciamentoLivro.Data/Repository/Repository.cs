@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace GerenciamentoLivro.Data.Repository
 {
-    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity, new()
+    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     {
         protected readonly GerenciamentoLivroDbContext _dbContext;
         protected readonly DbSet<TEntity> _dbSet;
@@ -46,8 +46,12 @@ namespace GerenciamentoLivro.Data.Repository
 
         public virtual async Task Remover(Guid id)
         {
-            _dbSet.Remove(new TEntity { Id = id });
-            await SaveChanges();
+            var entity = await ObterPorId(id);
+            if (entity != null)
+            {
+                _dbSet.Remove(entity);
+                await SaveChanges();
+            }
         }
 
         public async Task<int> SaveChanges()
