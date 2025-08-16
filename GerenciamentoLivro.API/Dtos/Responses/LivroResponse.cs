@@ -4,6 +4,7 @@ namespace GerenciamentoLivro.API.Dtos.Responses
 {
     public class LivroResponse
     {
+        public Guid Id { get; set; }
         public string Titulo { get; set; }
         public string Autor { get; set; }
         public string Isbn { get; set; }
@@ -13,6 +14,7 @@ namespace GerenciamentoLivro.API.Dtos.Responses
         {
             return new LivroResponse
             {
+                Id = livro.Id,
                 Titulo = livro.Titulo,
                 Autor = livro.Autor,
                 Isbn = livro.Isbn,
