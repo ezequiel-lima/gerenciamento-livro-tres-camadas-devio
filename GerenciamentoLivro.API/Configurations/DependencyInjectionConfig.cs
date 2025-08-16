@@ -12,12 +12,14 @@ namespace GerenciamentoLivro.API.Configurations
             #region Injeção Data
 
             builder.Services.AddScoped<ILivroRepository, LivroRepository>();
+            builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
             #endregion
 
             #region Injeção Domain
 
             builder.Services.AddScoped<ILivroService, LivroService>();
+            builder.Services.AddScoped<IUsuarioService, UsuarioService>();
             builder.Services.AddScoped<INotificador, Notificador>();
 
             #endregion
