@@ -4,6 +4,7 @@ using GerenciamentoLivro.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GerenciamentoLivro.Data.Migrations
 {
     [DbContext(typeof(GerenciamentoLivroDbContext))]
-    partial class GerenciamentoLivroDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250818191348_Tree")]
+    partial class Tree
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +34,7 @@ namespace GerenciamentoLivro.Data.Migrations
                     b.Property<DateTime>("DataDeEmprestimo")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DataDevolucaoEfetiva")
+                    b.Property<DateTime>("DataDevolucaoEfetiva")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DataDevolucaoPrevista")

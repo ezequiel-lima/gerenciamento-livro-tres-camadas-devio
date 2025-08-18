@@ -1,5 +1,6 @@
 ﻿using GerenciamentoLivro.Domain.Interfaces;
 using GerenciamentoLivro.Domain.Models;
+using GerenciamentoLivro.Domain.Validations;
 
 namespace GerenciamentoLivro.Domain.Services
 {
@@ -24,22 +25,40 @@ namespace GerenciamentoLivro.Domain.Services
 
         public async Task Adicionar(Livro livro)
         {
+            if (!ValidarEntidade(livro, new LivroValidation()))
+                return;
+
+            if (await _livroRepository.Existe(x => x.Isbn == livro.Isbn))
+            {
+                Notificar("Já existe um livro com este Isbn informado.");
+                return;
+            }
+
             await _livroRepository.Adicionar(livro);
         }
 
         public async Task Update(Guid id, Livro livro)
         {
-            var livroParaAtualizacao = await _livroRepository.ObterPorId(id);
+            if (!ValidarEntidade(livro, new LivroValidation()))
+                return;
 
-            if (livroParaAtualizacao is null)
+            if (await _livroRepository.Existe(x => x.Isbn == livro.Isbn && x.Id != id))
+            {
+                Notificar("Já existe um livro com este Isbn informado.");
+                return;
+            }
+
+            var livroExistente = await _livroRepository.ObterPorId(id);
+
+            if (livroExistente is null)
             {
                 Notificar("Livro não encontrado");
                 return;
             }
 
-            livroParaAtualizacao.AtualizarDados(livro.Titulo, livro.Autor, livro.Isbn, livro.DataDePublicacao);
+            livroExistente.AtualizarDados(livro.Titulo, livro.Autor, livro.Isbn, livro.DataDePublicacao);
 
-            await _livroRepository.Atualizar(livroParaAtualizacao);
+            await _livroRepository.Atualizar(livroExistente);
         }
 
         public async Task Remover(Guid id)

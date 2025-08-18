@@ -32,6 +32,11 @@ namespace GerenciamentoLivro.Data.Repository
             return await _dbSet.Where(predicate).ToListAsync();
         }
 
+        public async Task<bool> Existe(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await _dbSet.AnyAsync(predicate);
+        }
+
         public virtual async Task Adicionar(TEntity entity)
         {
             _dbSet.Add(entity);

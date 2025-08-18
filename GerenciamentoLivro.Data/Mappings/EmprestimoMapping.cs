@@ -10,9 +10,6 @@ namespace GerenciamentoLivro.Data.Mappings
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.DataDeEmprestimo)
-                   .IsRequired();
-
             builder.HasOne(x => x.Usuario)
                    .WithMany()
                    .HasForeignKey(x => x.IdUsuario);
@@ -20,6 +17,14 @@ namespace GerenciamentoLivro.Data.Mappings
             builder.HasOne(x => x.Livro)
                    .WithMany()
                    .HasForeignKey(x => x.IdLivro);
+
+            builder.Property(x => x.DataDeEmprestimo)
+                   .IsRequired();
+
+            builder.Property(x => x.DataDevolucaoPrevista)
+                   .IsRequired();
+
+            builder.Property(x => x.DataDevolucaoEfetiva);
 
             builder.ToTable("Emprestimos");
         }

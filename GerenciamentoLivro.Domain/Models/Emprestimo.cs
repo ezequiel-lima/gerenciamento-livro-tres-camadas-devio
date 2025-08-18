@@ -17,6 +17,13 @@
         public Guid IdLivro { get; set; }
         public Livro Livro { get; set; }
 
-        public DateTime DataDeEmprestimo { get; set; } 
+        public DateTime DataDeEmprestimo { get; set; }
+        public DateTime DataDevolucaoPrevista { get; set; }
+        public DateTime? DataDevolucaoEfetiva { get; set; }
+
+        public void DefinirDataDevolucaoPrevista(DateTime dataDevolucao)
+        {
+            DataDevolucaoPrevista = dataDevolucao;
+        }
     }
 }

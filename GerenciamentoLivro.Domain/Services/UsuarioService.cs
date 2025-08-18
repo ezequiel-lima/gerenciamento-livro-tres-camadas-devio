@@ -1,5 +1,6 @@
 ﻿using GerenciamentoLivro.Domain.Interfaces;
 using GerenciamentoLivro.Domain.Models;
+using GerenciamentoLivro.Domain.Validations;
 
 namespace GerenciamentoLivro.Domain.Services
 {
@@ -14,6 +15,9 @@ namespace GerenciamentoLivro.Domain.Services
 
         public async Task Adicionar(Usuario usuario)
         {
+            if (!ValidarEntidade(usuario, new UsuarioValidation()))
+                return;
+
             await _usuarioRepository.Adicionar(usuario);
         }
     }

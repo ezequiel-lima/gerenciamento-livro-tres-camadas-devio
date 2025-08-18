@@ -11,6 +11,7 @@ namespace GerenciamentoLivro.Domain.Interfaces
         Task Atualizar(TEntity entity);
         Task Remover(Guid id);
         Task<IEnumerable<TEntity>> Buscar(Expression<Func<TEntity, bool>> predicate);
+        Task<bool> Existe(Expression<Func<TEntity, bool>> predicate);
         Task<int> SaveChanges();
     }
 }
