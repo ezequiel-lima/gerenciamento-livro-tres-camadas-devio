@@ -24,7 +24,7 @@ namespace GerenciamentoLivro.Data.Repository
 
         public virtual async Task<List<TEntity>> ObterTodos()
         {
-            return await _dbSet.ToListAsync();
+            return await _dbSet.AsNoTracking().ToListAsync();
         }
 
         public async Task<IEnumerable<TEntity>> Buscar(Expression<Func<TEntity, bool>> predicate)
