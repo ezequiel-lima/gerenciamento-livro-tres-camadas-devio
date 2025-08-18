@@ -5,31 +5,31 @@ namespace GerenciamentoLivro.Domain.Services
 {
     public class LivroService : BaseService, ILivroService
     {
-        private readonly ILivroRepository _repository;
+        private readonly ILivroRepository _livroRepository;
 
         public LivroService(INotificador notificador, ILivroRepository repository) : base(notificador)
         {
-            _repository = repository;
+            _livroRepository = repository;
         }
 
         public async Task<IEnumerable<Livro>> ObterTodos()
         {
-            return await _repository.ObterTodos();
+            return await _livroRepository.ObterTodos();
         }
 
         public async Task<Livro?> ObterLivro(string titulo)
         {
-            return await _repository.ObterLivro(titulo);
+            return await _livroRepository.ObterLivro(titulo);
         }
 
         public async Task Adicionar(Livro livro)
         {
-            await _repository.Adicionar(livro);
+            await _livroRepository.Adicionar(livro);
         }
 
         public async Task Update(Guid id, Livro livro)
         {
-            var livroParaAtualizacao = await _repository.ObterPorId(id);
+            var livroParaAtualizacao = await _livroRepository.ObterPorId(id);
 
             if (livroParaAtualizacao is null)
             {
@@ -39,12 +39,12 @@ namespace GerenciamentoLivro.Domain.Services
 
             livroParaAtualizacao.AtualizarDados(livro.Titulo, livro.Autor, livro.Isbn, livro.DataDePublicacao);
 
-            await _repository.Atualizar(livroParaAtualizacao);
+            await _livroRepository.Atualizar(livroParaAtualizacao);
         }
 
         public async Task Remover(Guid id)
         {
-            await _repository.Remover(id);
+            await _livroRepository.Remover(id);
         }
     }
 }

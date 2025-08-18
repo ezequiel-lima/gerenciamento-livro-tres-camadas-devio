@@ -13,6 +13,7 @@ namespace GerenciamentoLivro.API.Configurations
 
             builder.Services.AddScoped<ILivroRepository, LivroRepository>();
             builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            builder.Services.AddScoped<IEmprestimoRepository, EmprestimoRepository>();
 
             #endregion
 
@@ -20,6 +21,7 @@ namespace GerenciamentoLivro.API.Configurations
 
             builder.Services.AddScoped<ILivroService, LivroService>();
             builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+            builder.Services.AddScoped<IEmprestimoService, EmprestimoService>();
             builder.Services.AddScoped<INotificador, Notificador>();
 
             #endregion

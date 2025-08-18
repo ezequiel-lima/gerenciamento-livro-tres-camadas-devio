@@ -28,9 +28,9 @@ namespace GerenciamentoLivro.Domain.Services
             _notificador.Handler(new Notificacao(mensagem));
         }
 
-        protected bool ExecutarValidacao<TValidation, TEntity>(TValidation validacao, TEntity entidade)
-            where TValidation : AbstractValidator<TEntity>
+        protected bool ValidarEntidade<TValidation, TEntity>(TEntity entidade, TValidation validacao)
             where TEntity : Entity
+            where TValidation : AbstractValidator<TEntity>
         {
             var validator = validacao.Validate(entidade);
 

@@ -2,12 +2,21 @@
 {
     public class Emprestimo : Entity
     {
+        protected Emprestimo() { }
+
+        public Emprestimo(Guid idUsuario, Guid idLivro)
+        {
+            IdUsuario = idUsuario;
+            IdLivro = idLivro;
+            DataDeEmprestimo = DateTime.Now;
+        }
+
         public Guid IdUsuario { get; set; }
         public Usuario Usuario { get; set; }
 
         public Guid IdLivro { get; set; }
         public Livro Livro { get; set; }
 
-        public DateTime DataDeEmprestimo { get; set; } = DateTime.Now;
+        public DateTime DataDeEmprestimo { get; set; } 
     }
 }
