@@ -7,6 +7,9 @@ namespace GerenciamentoLivro.API.Dtos.Responses
         public Guid IdUsuario { get; set; }
         public Guid IdLivro { get; set; }
         public DateTime DataDeEmprestimo { get; set; }
+        public DateTime DataDevolucaoPrevista { get; set; }
+        public DateTime? DataDevolucaoEfetiva { get; set; }
+
 
         public static explicit operator EmprestimoResponse(Emprestimo emprestimo)
         {
@@ -14,7 +17,9 @@ namespace GerenciamentoLivro.API.Dtos.Responses
             {
                 IdUsuario = emprestimo.IdUsuario,
                 IdLivro = emprestimo.IdLivro,
-                DataDeEmprestimo = emprestimo.DataDeEmprestimo
+                DataDeEmprestimo = emprestimo.DataDeEmprestimo,
+                DataDevolucaoPrevista = emprestimo.DataDevolucaoPrevista,
+                DataDevolucaoEfetiva = emprestimo.DataDevolucaoEfetiva
             };
         }
     }

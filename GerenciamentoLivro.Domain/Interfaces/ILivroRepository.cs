@@ -4,6 +4,6 @@ namespace GerenciamentoLivro.Domain.Interfaces
 {
     public interface ILivroRepository : IRepository<Livro>
     {
-        Task<Livro?> ObterLivro(string titulo);
+        Task<Livro?> BuscarLivros(string titulo);
     }
 }

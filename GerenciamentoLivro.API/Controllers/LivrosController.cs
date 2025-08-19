@@ -18,23 +18,14 @@ namespace GerenciamentoLivro.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LivroResponse>>> ObterTodos()
+        public async Task<ActionResult<IEnumerable<LivroResponse>>> ObterLivros(string? titulo)
         {
-            var livros = await _livroService.ObterTodos();
-            var response = livros.Select(x => (LivroResponse)x);
-            return CustomResponse(HttpStatusCode.OK, response);
-        }
+            var livros = await _livroService.BuscarLivros(titulo);
 
-        [HttpGet("buscar")]
-        public async Task<ActionResult<LivroResponse>> ObterLivro(string titulo)
-        {
-            var livro = await _livroService.ObterLivro(titulo);
-
-            if (livro is null)
+            if (!livros.Any())
                 return CustomResponse(HttpStatusCode.NotFound);
 
-            var response = (LivroResponse)livro;
-            return CustomResponse(HttpStatusCode.OK, response);
+            return CustomResponse(HttpStatusCode.OK, livros);
         }
 
         [HttpPost]

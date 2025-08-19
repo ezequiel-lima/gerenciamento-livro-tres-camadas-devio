@@ -11,7 +11,7 @@ namespace GerenciamentoLivro.Data.Repository
         {
         }
 
-        public async Task<Livro?> ObterLivro(string titulo)
+        public async Task<Livro?> BuscarLivros(string titulo)
         {
             return await _dbSet.FirstOrDefaultAsync(x => x.Titulo == titulo);
         }

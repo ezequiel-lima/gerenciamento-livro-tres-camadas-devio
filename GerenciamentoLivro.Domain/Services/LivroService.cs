@@ -13,14 +13,16 @@ namespace GerenciamentoLivro.Domain.Services
             _livroRepository = repository;
         }
 
-        public async Task<IEnumerable<Livro>> ObterTodos()
+        public async Task<IEnumerable<Livro>> BuscarLivros(string? titulo)
         {
-            return await _livroRepository.ObterTodos();
-        }
+            if (string.IsNullOrWhiteSpace(titulo))
+                return await _livroRepository.ObterTodos();
 
-        public async Task<Livro?> ObterLivro(string titulo)
-        {
-            return await _livroRepository.ObterLivro(titulo);
+            var livro = await _livroRepository.BuscarLivros(titulo);
+
+            return livro is null
+                ? Enumerable.Empty<Livro>()
+                : new[] { livro };
         }
 
         public async Task Adicionar(Livro livro)

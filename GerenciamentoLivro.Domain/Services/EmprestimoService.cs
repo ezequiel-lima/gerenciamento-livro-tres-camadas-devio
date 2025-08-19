@@ -7,11 +7,16 @@ namespace GerenciamentoLivro.Domain.Services
     public class EmprestimoService : BaseService, IEmprestimoService
     {
         private readonly IEmprestimoRepository _emprestimoRepository;
-        private readonly int _maximoDeDiasPermitidoParaDevolucao = 30;
+        private const int MaximoLivrosPermitidos = 3;
 
         public EmprestimoService(INotificador notificador, IEmprestimoRepository emprestimoRepository) : base(notificador)
         {
             _emprestimoRepository = emprestimoRepository;
+        }
+
+        public async Task<IEnumerable<Emprestimo>> ObterEmprestimosAtivosPorUsuario(Guid idUsuario)
+        {
+            return await _emprestimoRepository.ObterEmprestimosAtivosPorUsuario(idUsuario);
         }
 
         public async Task Adicionar(Emprestimo emprestimo)
@@ -26,12 +31,30 @@ namespace GerenciamentoLivro.Domain.Services
             }
 
             var emprestimosAtivos = await _emprestimoRepository.ObterEmprestimosAtivosPorUsuario(emprestimo.IdUsuario);
+            var quantidadeEmprestimosAtivos = emprestimosAtivos.Count();
 
-            var dataDevolucao = CalcularDataDevolucao(emprestimosAtivos);
+            if (UsuarioAtingiuLimiteDeLivros(quantidadeEmprestimosAtivos))
+            {
+                Notificar($"Você já atingiu o limite máximo de {MaximoLivrosPermitidos} livros alugados.");
+                return;
+            }
+
+            var dataDevolucao = CalcularDataDevolucaoPorQuantidade(quantidadeEmprestimosAtivos + 1);
 
             emprestimo.DefinirDataDevolucaoPrevista(dataDevolucao);
 
+            await AtualizarTodosOsEmprestimos(emprestimosAtivos, dataDevolucao);
+
             await _emprestimoRepository.Adicionar(emprestimo);
+        }
+
+        private async Task AtualizarTodosOsEmprestimos(IEnumerable<Emprestimo> emprestimosAtivos, DateTime dataDevolucao)
+        {
+            foreach (var emprestimoAtivo in emprestimosAtivos)
+            {
+                emprestimoAtivo.DefinirDataDevolucaoPrevista(dataDevolucao);
+                await _emprestimoRepository.Atualizar(emprestimoAtivo);
+            }
         }
 
         private async Task<bool> UsuarioJaAlugouEsteLivro(Emprestimo emprestimo)
@@ -42,20 +65,20 @@ namespace GerenciamentoLivro.Domain.Services
                 x.DataDevolucaoEfetiva == null);
         }
 
-        private DateTime CalcularDataDevolucao(IEnumerable<Emprestimo> emprestimosAtivos)
+        private bool UsuarioAtingiuLimiteDeLivros(int emprestimosAtivos)
         {
-            var primeiroEmprestimo = emprestimosAtivos
-                .OrderBy(e => e.DataDeEmprestimo)
-                .FirstOrDefault();
+            return emprestimosAtivos >= MaximoLivrosPermitidos;
+        }
 
-            var dataLimite = primeiroEmprestimo?.DataDevolucaoPrevista
-                             ?? DateTime.Now.AddDays(_maximoDeDiasPermitidoParaDevolucao);
-
-            var quantidadeDeEmprestimos = emprestimosAtivos.Count();
-            var prazoIdealEmDias = _maximoDeDiasPermitidoParaDevolucao / (quantidadeDeEmprestimos + 1);
-            var dataIdeal = DateTime.Now.AddDays(prazoIdealEmDias);
-
-            return dataIdeal > dataLimite ? dataLimite : dataIdeal;
+        private DateTime CalcularDataDevolucaoPorQuantidade(int totalLivrosEmprestados)
+        {
+            return totalLivrosEmprestados switch
+            {
+                1 => DateTime.Now.AddDays(30),
+                2 => DateTime.Now.AddDays(15),
+                3 => DateTime.Now.AddDays(7),
+                _ => throw new InvalidOperationException("Número de livros inválido para empréstimo.")
+            };
         }
     }
 }
