@@ -25,7 +25,8 @@ namespace GerenciamentoLivro.API.Controllers
             if (!livros.Any())
                 return CustomResponse(HttpStatusCode.NotFound);
 
-            return CustomResponse(HttpStatusCode.OK, livros);
+            var response = livros.Select(x => (LivroResponse)x);
+            return CustomResponse(HttpStatusCode.OK, response);
         }
 
         [HttpPost]

@@ -11,12 +11,12 @@ namespace GerenciamentoLivro.API.Controllers
     public class UsuariosController : MainController
     {
         private readonly IUsuarioService _usuarioService;
-        private readonly IEmprestimoService _serviceEmprestimo;
+        private readonly IEmprestimoService _emprestimoService;
 
         public UsuariosController(INotificador notificador, IUsuarioService usuarioService, IEmprestimoService serviceEmprestimo) : base(notificador)
         {
             _usuarioService = usuarioService;
-            _serviceEmprestimo = serviceEmprestimo;
+            _emprestimoService = serviceEmprestimo;
         }
 
         [HttpPost]
@@ -35,7 +35,7 @@ namespace GerenciamentoLivro.API.Controllers
         [HttpGet("{id:guid}/emprestimos")]
         public async Task<ActionResult<EmprestimoResponse>> ObterEmprestimosAtivosPorUsuario(Guid id)
         {
-            var emprestimos = await _serviceEmprestimo.ObterEmprestimosAtivosPorUsuario(id);
+            var emprestimos = await _emprestimoService.ObterEmprestimosAtivosPorUsuario(id);
 
             if (emprestimos == null || !emprestimos.Any())
                 return CustomResponse(HttpStatusCode.NotFound);

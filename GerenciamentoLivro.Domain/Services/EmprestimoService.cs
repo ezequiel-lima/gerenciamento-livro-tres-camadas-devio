@@ -14,6 +14,11 @@ namespace GerenciamentoLivro.Domain.Services
             _emprestimoRepository = emprestimoRepository;
         }
 
+        public async Task<ResultadoPaginado<Emprestimo>> ObterEmprestimosPaginados(int numeroPagina = 0, int tamanhoPagina = 12)
+        {
+            return await _emprestimoRepository.ObterPaginado(numeroPagina, tamanhoPagina);
+        }
+
         public async Task<IEnumerable<Emprestimo>> ObterEmprestimosAtivosPorUsuario(Guid idUsuario)
         {
             return await _emprestimoRepository.ObterEmprestimosAtivosPorUsuario(idUsuario);

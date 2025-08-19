@@ -18,7 +18,7 @@ namespace GerenciamentoLivro.Data.Mappings
                    .WithMany()
                    .HasForeignKey(x => x.IdLivro);
 
-            builder.Property(x => x.DataDeEmprestimo)
+            builder.Property(x => x.DataEmprestimo)
                    .IsRequired();
 
             builder.Property(x => x.DataDevolucaoPrevista)

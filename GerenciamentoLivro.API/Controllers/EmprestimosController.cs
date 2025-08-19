@@ -10,11 +10,32 @@ namespace GerenciamentoLivro.API.Controllers
     [Route("api/[controller]")]
     public class EmprestimosController : MainController
     {
-        private readonly IEmprestimoService _serviceEmprestimo;
+        private readonly IEmprestimoService _emprestimoService;
 
         public EmprestimosController(INotificador notificador, IEmprestimoService serviceEmprestimo) : base(notificador)
         {
-            _serviceEmprestimo = serviceEmprestimo;
+            _emprestimoService = serviceEmprestimo;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<ResultadoPaginado<EmprestimoResponse>>> ObterEmprestimosPaginados(
+            int numeroPagina = 0, 
+            int tamanhoPagina = 12)
+        {
+            var emprestimos = await _emprestimoService.ObterEmprestimosPaginados(numeroPagina, tamanhoPagina);
+
+            if (emprestimos is null || !emprestimos.Itens.Any())
+                return CustomResponse(HttpStatusCode.NotFound);
+
+            var response = new ResultadoPaginado<EmprestimoResponse>
+            {
+                Itens = emprestimos.Itens.Select(e => (EmprestimoResponse)e),
+                TotalItens = emprestimos.TotalItens,
+                NumeroPagina = emprestimos.NumeroPagina,
+                TamanhoPagina = emprestimos.TamanhoPagina
+            };
+
+            return CustomResponse(HttpStatusCode.OK, response);
         }
 
         [HttpPost]
@@ -24,7 +45,7 @@ namespace GerenciamentoLivro.API.Controllers
                 return CustomResponse(ModelState);
 
             var emprestimo = (Emprestimo)request;
-            await _serviceEmprestimo.Adicionar(emprestimo);
+            await _emprestimoService.Adicionar(emprestimo);
 
             var response = (EmprestimoResponse)emprestimo;
             return CustomResponse(HttpStatusCode.Created, response);

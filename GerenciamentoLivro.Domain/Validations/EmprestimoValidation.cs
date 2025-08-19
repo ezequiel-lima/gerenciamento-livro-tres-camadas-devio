@@ -13,7 +13,7 @@ namespace GerenciamentoLivro.Domain.Validations
             RuleFor(e => e.IdLivro)
                 .NotEqual(Guid.Empty).WithMessage("Livro inválido.");
 
-            RuleFor(e => e.DataDeEmprestimo)
+            RuleFor(e => e.DataEmprestimo)
                 .LessThan(DateTime.Now).WithMessage("A data de empréstimo não pode ser no futuro.");
         }
     }

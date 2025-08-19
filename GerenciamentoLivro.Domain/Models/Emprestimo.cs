@@ -8,7 +8,7 @@
         {
             IdUsuario = idUsuario;
             IdLivro = idLivro;
-            DataDeEmprestimo = DateTime.Now;
+            DataEmprestimo = DateTime.Now;
         }
 
         public Guid IdUsuario { get; set; }
@@ -17,7 +17,7 @@
         public Guid IdLivro { get; set; }
         public Livro Livro { get; set; }
 
-        public DateTime DataDeEmprestimo { get; set; }
+        public DateTime DataEmprestimo { get; set; }
         public DateTime DataDevolucaoPrevista { get; set; }
         public DateTime? DataDevolucaoEfetiva { get; set; }
 

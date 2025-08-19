@@ -59,6 +59,24 @@ namespace GerenciamentoLivro.Data.Repository
             }
         }
 
+        public async Task<ResultadoPaginado<TEntity>> ObterPaginado(int numeroPagina = 0, int tamanhoPagina = 12)
+        {
+            var totalItens = await _dbSet.CountAsync();
+            var itens = await _dbSet
+                .AsNoTracking()
+                .Skip(numeroPagina * tamanhoPagina) 
+                .Take(tamanhoPagina)
+                .ToListAsync();
+
+            return new ResultadoPaginado<TEntity>
+            {
+                Itens = itens,
+                TotalItens = totalItens,
+                NumeroPagina = numeroPagina,
+                TamanhoPagina = tamanhoPagina
+            };
+        }
+
         public async Task<int> SaveChanges()
         {
             return await _dbContext.SaveChangesAsync();
