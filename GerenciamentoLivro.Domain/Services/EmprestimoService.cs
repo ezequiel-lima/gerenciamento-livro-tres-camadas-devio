@@ -19,9 +19,9 @@ namespace GerenciamentoLivro.Domain.Services
             return await _emprestimoRepository.ObterPaginado(numeroPagina, tamanhoPagina);
         }
 
-        public async Task<IEnumerable<Emprestimo>> ObterEmprestimosAtivosPorUsuario(Guid idUsuario)
+        public async Task<IEnumerable<Emprestimo>> ObterEmprestimosAtivosEVencidosPorUsuario(Guid idUsuario)
         {
-            return await _emprestimoRepository.ObterEmprestimosAtivosPorUsuario(idUsuario);
+            return await _emprestimoRepository.ObterEmprestimosAtivosEVencidosPorUsuario(idUsuario);
         }
 
         public async Task Adicionar(Emprestimo emprestimo)
@@ -35,20 +35,20 @@ namespace GerenciamentoLivro.Domain.Services
                 return;
             }
 
-            var emprestimosAtivos = await _emprestimoRepository.ObterEmprestimosAtivosPorUsuario(emprestimo.IdUsuario);
-            var quantidadeEmprestimosAtivos = emprestimosAtivos.Count();
+            var emprestimosAtivosEVencidos = await _emprestimoRepository.ObterEmprestimosAtivosEVencidosPorUsuario(emprestimo.IdUsuario);
+            var quantidadeEmprestimosAtivosEVencidos = emprestimosAtivosEVencidos.Count();
 
-            if (UsuarioAtingiuLimiteDeLivros(quantidadeEmprestimosAtivos))
+            if (UsuarioAtingiuLimiteDeLivros(quantidadeEmprestimosAtivosEVencidos))
             {
                 Notificar($"Você já atingiu o limite máximo de {MaximoLivrosPermitidos} livros alugados.");
                 return;
             }
 
-            var dataDevolucao = CalcularDataDevolucaoPorQuantidade(quantidadeEmprestimosAtivos + 1);
+            var dataDevolucao = CalcularDataDevolucaoPorQuantidade(quantidadeEmprestimosAtivosEVencidos + 1);
 
             emprestimo.DefinirDataDevolucaoPrevista(dataDevolucao);
 
-            await AtualizarTodosOsEmprestimos(emprestimosAtivos, dataDevolucao);
+            await AtualizarTodosOsEmprestimos(emprestimosAtivosEVencidos, dataDevolucao);
 
             await _emprestimoRepository.Adicionar(emprestimo);
         }

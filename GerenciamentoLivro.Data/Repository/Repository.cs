@@ -59,7 +59,7 @@ namespace GerenciamentoLivro.Data.Repository
             }
         }
 
-        public async Task<ResultadoPaginado<TEntity>> ObterPaginado(int numeroPagina = 0, int tamanhoPagina = 12)
+        public virtual async Task<ResultadoPaginado<TEntity>> ObterPaginado(int numeroPagina = 0, int tamanhoPagina = 12)
         {
             var totalItens = await _dbSet.CountAsync();
             var itens = await _dbSet

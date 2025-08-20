@@ -47,7 +47,7 @@ namespace GerenciamentoLivro.API.Controllers
             var emprestimo = (Emprestimo)request;
             await _emprestimoService.Adicionar(emprestimo);
 
-            var response = (EmprestimoResponse)emprestimo;
+            var response = (CreateEmprestimoResponse)emprestimo;
             return CustomResponse(HttpStatusCode.Created, response);
         }
     }
