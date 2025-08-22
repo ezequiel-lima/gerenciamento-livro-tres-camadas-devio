@@ -35,7 +35,7 @@ namespace GerenciamentoLivro.API.Controllers
         [HttpGet("{id:guid}/emprestimos")]
         public async Task<ActionResult<EmprestimoResponse>> ObterEmprestimosAtivosPorUsuario(Guid id)
         {
-            var emprestimos = await _emprestimoService.ObterEmprestimosAtivosEVencidosPorUsuario(id);
+            var emprestimos = await _emprestimoService.ObterEmprestimosAtivos(id);
 
             if (emprestimos == null || !emprestimos.Any())
                 return CustomResponse(HttpStatusCode.NotFound);

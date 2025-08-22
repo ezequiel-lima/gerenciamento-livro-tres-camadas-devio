@@ -17,67 +17,49 @@ namespace GerenciamentoLivro.Data.Repository
             _dbSet = dbContext.Set<TEntity>();
         }
 
-        public virtual async Task<TEntity> ObterPorId(Guid id)
+        public virtual IQueryable<TEntity> ObterQueryable()
         {
-            return await _dbSet.FindAsync(id);
+            return _dbSet.AsNoTracking();
         }
 
-        public virtual async Task<List<TEntity>> ObterTodos()
+        public virtual IQueryable<TEntity> Filtrar(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _dbSet.AsNoTracking().ToListAsync();
+            return _dbSet.AsNoTracking().Where(predicate);
         }
 
-        public async Task<IEnumerable<TEntity>> Buscar(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<TEntity?> ObterPorIdAsync(Guid id)
         {
-            return await _dbSet.Where(predicate).ToListAsync();
+            return await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<bool> Existe(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<bool> ExisteAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await _dbSet.AnyAsync(predicate);
         }
 
-        public virtual async Task Adicionar(TEntity entity)
+        public virtual async Task AdicionarAsync(TEntity entity)
         {
             _dbSet.Add(entity);
-            await SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public virtual async Task Atualizar(TEntity entity)
+        public virtual async Task AtualizarAsync(TEntity entity)
         {
             _dbSet.Update(entity);
-            await SaveChanges();
+            await SaveChangesAsync();
         }
 
-        public virtual async Task Remover(Guid id)
+        public virtual async Task RemoverAsync(Guid id)
         {
-            var entity = await ObterPorId(id);
-            if (entity != null)
+            var entity = await _dbSet.FindAsync(id);
+            if (entity is not null)
             {
                 _dbSet.Remove(entity);
-                await SaveChanges();
+                await SaveChangesAsync();
             }
         }
 
-        public virtual async Task<ResultadoPaginado<TEntity>> ObterPaginado(int numeroPagina = 0, int tamanhoPagina = 12)
-        {
-            var totalItens = await _dbSet.CountAsync();
-            var itens = await _dbSet
-                .AsNoTracking()
-                .Skip(numeroPagina * tamanhoPagina) 
-                .Take(tamanhoPagina)
-                .ToListAsync();
-
-            return new ResultadoPaginado<TEntity>
-            {
-                Itens = itens,
-                TotalItens = totalItens,
-                NumeroPagina = numeroPagina,
-                TamanhoPagina = tamanhoPagina
-            };
-        }
-
-        public async Task<int> SaveChanges()
+        public virtual async Task<int> SaveChangesAsync()
         {
             return await _dbContext.SaveChangesAsync();
         }

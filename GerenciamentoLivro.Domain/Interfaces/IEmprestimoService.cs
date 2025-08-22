@@ -6,6 +6,6 @@ namespace GerenciamentoLivro.Domain.Interfaces
     {
         Task Adicionar(Emprestimo emprestimo);
         Task<ResultadoPaginado<Emprestimo>> ObterEmprestimosPaginados(int numeroPagina = 0, int tamanhoPagina = 12);
-        Task<IEnumerable<Emprestimo>> ObterEmprestimosAtivosEVencidosPorUsuario(Guid idUsuario);
+        Task<IEnumerable<Emprestimo>> ObterEmprestimosAtivos(Guid idUsuario);
     }
 }

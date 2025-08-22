@@ -18,7 +18,7 @@ namespace GerenciamentoLivro.Domain.Services
             if (!ValidarEntidade(usuario, new UsuarioValidation()))
                 return;
 
-            await _usuarioRepository.Adicionar(usuario);
+            await _usuarioRepository.AdicionarAsync(usuario);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using GerenciamentoLivro.Domain.Interfaces;
 using GerenciamentoLivro.Domain.Models;
 using GerenciamentoLivro.Domain.Validations;
+using Microsoft.EntityFrameworkCore;
 
 namespace GerenciamentoLivro.Domain.Services
 {
@@ -16,12 +17,27 @@ namespace GerenciamentoLivro.Domain.Services
 
         public async Task<ResultadoPaginado<Emprestimo>> ObterEmprestimosPaginados(int numeroPagina = 0, int tamanhoPagina = 12)
         {
-            return await _emprestimoRepository.ObterPaginado(numeroPagina, tamanhoPagina);
+            var query = _emprestimoRepository.ObterComLivroEUsuario();
+
+            var total = await query.CountAsync();
+            var itens = await query
+                .Skip(numeroPagina * tamanhoPagina)
+                .Take(tamanhoPagina)
+                .ToListAsync();
+
+            return new ResultadoPaginado<Emprestimo>
+            {
+                Itens = itens,
+                TotalItens = total,
+                NumeroPagina = numeroPagina,
+                TamanhoPagina = tamanhoPagina
+            };
         }
 
-        public async Task<IEnumerable<Emprestimo>> ObterEmprestimosAtivosEVencidosPorUsuario(Guid idUsuario)
+        public async Task<IEnumerable<Emprestimo>> ObterEmprestimosAtivos(Guid idUsuario)
         {
-            return await _emprestimoRepository.ObterEmprestimosAtivosEVencidosPorUsuario(idUsuario);
+            var query = _emprestimoRepository.ObterAtivosPorUsuario(idUsuario);
+            return await query.ToListAsync();       
         }
 
         public async Task Adicionar(Emprestimo emprestimo)
@@ -35,22 +51,22 @@ namespace GerenciamentoLivro.Domain.Services
                 return;
             }
 
-            var emprestimosAtivosEVencidos = await _emprestimoRepository.ObterEmprestimosAtivosEVencidosPorUsuario(emprestimo.IdUsuario);
-            var quantidadeEmprestimosAtivosEVencidos = emprestimosAtivosEVencidos.Count();
+            var emprestimosAtivo = await _emprestimoRepository.ObterAtivosPorUsuario(emprestimo.IdUsuario).ToListAsync();
+            var quantidadeEmprestimosAtivos = emprestimosAtivo.Count();
 
-            if (UsuarioAtingiuLimiteDeLivros(quantidadeEmprestimosAtivosEVencidos))
+            if (UsuarioAtingiuLimiteDeLivros(quantidadeEmprestimosAtivos))
             {
                 Notificar($"Você já atingiu o limite máximo de {MaximoLivrosPermitidos} livros alugados.");
                 return;
             }
 
-            var dataDevolucao = CalcularDataDevolucaoPorQuantidade(quantidadeEmprestimosAtivosEVencidos + 1);
+            var dataDevolucao = CalcularDataDevolucaoPorQuantidade(quantidadeEmprestimosAtivos + 1);
 
             emprestimo.DefinirDataDevolucaoPrevista(dataDevolucao);
 
-            await AtualizarTodosOsEmprestimos(emprestimosAtivosEVencidos, dataDevolucao);
+            await AtualizarTodosOsEmprestimos(emprestimosAtivo, dataDevolucao);
 
-            await _emprestimoRepository.Adicionar(emprestimo);
+            await _emprestimoRepository.AdicionarAsync(emprestimo);
         }
 
         private async Task AtualizarTodosOsEmprestimos(IEnumerable<Emprestimo> emprestimosAtivos, DateTime dataDevolucao)
@@ -58,13 +74,13 @@ namespace GerenciamentoLivro.Domain.Services
             foreach (var emprestimoAtivo in emprestimosAtivos)
             {
                 emprestimoAtivo.DefinirDataDevolucaoPrevista(dataDevolucao);
-                await _emprestimoRepository.Atualizar(emprestimoAtivo);
+                await _emprestimoRepository.AtualizarAsync(emprestimoAtivo);
             }
         }
 
         private async Task<bool> UsuarioJaAlugouEsteLivro(Emprestimo emprestimo)
         {
-            return await _emprestimoRepository.Existe(x =>
+            return await _emprestimoRepository.ExisteAsync(x =>
                 x.IdLivro == emprestimo.IdLivro &&
                 x.IdUsuario == emprestimo.IdUsuario &&
                 x.DataDevolucaoEfetiva == null);

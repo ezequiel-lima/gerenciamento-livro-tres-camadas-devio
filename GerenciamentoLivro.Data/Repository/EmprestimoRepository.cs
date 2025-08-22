@@ -11,34 +11,21 @@ namespace GerenciamentoLivro.Data.Repository
         {
         }
 
-        public override async Task<ResultadoPaginado<Emprestimo>> ObterPaginado(int numeroPagina = 0, int tamanhoPagina = 12)
+        public IQueryable<Emprestimo> ObterComLivroEUsuario()
         {
-            var totalItens = await _dbSet.CountAsync();
-            var itens = await _dbSet
+            return _dbSet
+                .AsNoTracking()
+                .Include(x => x.Livro)
+                .Include(x => x.Usuario);
+        }
+
+        public IQueryable<Emprestimo> ObterAtivosPorUsuario(Guid idUsuario)
+        {
+            return _dbSet
                 .AsNoTracking()
                 .Include(x => x.Livro)
                 .Include(x => x.Usuario)
-                .Skip(numeroPagina * tamanhoPagina) 
-                .Take(tamanhoPagina)
-                .ToListAsync();
-
-            return new ResultadoPaginado<Emprestimo>
-            {
-                Itens = itens,
-                TotalItens = totalItens,
-                NumeroPagina = numeroPagina,
-                TamanhoPagina = tamanhoPagina
-            };
-        }
-
-        public async Task<IEnumerable<Emprestimo>> ObterEmprestimosAtivosEVencidosPorUsuario(Guid idUsuario)
-        {
-            return await _dbSet
-                .Include(x => x.Livro)
-                .Include(x => x.Usuario)
-                .Where(x => x.IdUsuario == idUsuario &&
-                    x.DataDevolucaoEfetiva == null)
-                .ToListAsync();
+                .Where(x => x.IdUsuario == idUsuario && x.DataDevolucaoEfetiva == null);
         }
     }
 }

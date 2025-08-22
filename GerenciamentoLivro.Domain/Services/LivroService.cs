@@ -1,6 +1,7 @@
 ﻿using GerenciamentoLivro.Domain.Interfaces;
 using GerenciamentoLivro.Domain.Models;
 using GerenciamentoLivro.Domain.Validations;
+using Microsoft.EntityFrameworkCore;
 
 namespace GerenciamentoLivro.Domain.Services
 {
@@ -16,7 +17,7 @@ namespace GerenciamentoLivro.Domain.Services
         public async Task<IEnumerable<Livro>> BuscarLivros(string? titulo)
         {
             if (string.IsNullOrWhiteSpace(titulo))
-                return await _livroRepository.ObterTodos();
+                return await _livroRepository.ObterQueryable().ToListAsync();
 
             var livro = await _livroRepository.BuscarLivros(titulo);
 
@@ -30,13 +31,13 @@ namespace GerenciamentoLivro.Domain.Services
             if (!ValidarEntidade(livro, new LivroValidation()))
                 return;
 
-            if (await _livroRepository.Existe(x => x.Isbn == livro.Isbn))
+            if (await _livroRepository.ExisteAsync(x => x.Isbn == livro.Isbn))
             {
                 Notificar("Já existe um livro com este Isbn informado.");
                 return;
             }
 
-            await _livroRepository.Adicionar(livro);
+            await _livroRepository.AdicionarAsync(livro);
         }
 
         public async Task Update(Guid id, Livro livro)
@@ -44,13 +45,13 @@ namespace GerenciamentoLivro.Domain.Services
             if (!ValidarEntidade(livro, new LivroValidation()))
                 return;
 
-            if (await _livroRepository.Existe(x => x.Isbn == livro.Isbn && x.Id != id))
+            if (await _livroRepository.ExisteAsync(x => x.Isbn == livro.Isbn && x.Id != id))
             {
                 Notificar("Já existe um livro com este Isbn informado.");
                 return;
             }
 
-            var livroExistente = await _livroRepository.ObterPorId(id);
+            var livroExistente = await _livroRepository.ObterPorIdAsync(id);
 
             if (livroExistente is null)
             {
@@ -60,12 +61,12 @@ namespace GerenciamentoLivro.Domain.Services
 
             livroExistente.AtualizarDados(livro.Titulo, livro.Autor, livro.Isbn, livro.DataDePublicacao);
 
-            await _livroRepository.Atualizar(livroExistente);
+            await _livroRepository.AtualizarAsync(livroExistente);
         }
 
         public async Task Remover(Guid id)
         {
-            await _livroRepository.Remover(id);
+            await _livroRepository.RemoverAsync(id);
         }
     }
 }
