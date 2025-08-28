@@ -33,7 +33,7 @@ Este projeto consiste em uma API REST para gerenciamento de uma biblioteca, incl
 - Não é permitido alugar o **mesmo livro mais de uma vez sem devolução**.
 - Ao realizar um novo empréstimo, a **data de devolução de todos os livros ativos é atualizada automaticamente**.
 
-## 🔗 Repositórios Relacionados
+## Repositórios Relacionados
 
 Este projeto faz parte de um conjunto de aplicações do sistema de gerenciamento de livros.
 
