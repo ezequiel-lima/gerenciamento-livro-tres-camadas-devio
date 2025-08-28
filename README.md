@@ -39,9 +39,9 @@ Este projeto faz parte de um conjunto de aplicações do sistema de gerenciament
 
 - 📦 **Azure Function - Loan Return Notifier App**  
   Responsável por emitir notificações de atraso com base nos empréstimos registrados.  
-  👉 [Repositório](https://github.com/ezequiel-lima/gerenciamento-livro-loan-return-notifier-app)
+  [Repositório](https://github.com/ezequiel-lima/gerenciamento-livro-loan-return-notifier-app)
 
 - 🧱 **API de Empréstimos**  
   API construída em arquitetura de três camadas (.NET) que fornece os dados de empréstimos.  
-  👉 [Repositório](https://github.com/ezequiel-lima/gerenciamento-livro-tres-camadas-devio)
+  [Repositório](https://github.com/ezequiel-lima/gerenciamento-livro-tres-camadas-devio)
 
