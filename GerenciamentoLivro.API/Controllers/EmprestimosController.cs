@@ -38,6 +38,27 @@ namespace GerenciamentoLivro.API.Controllers
             return CustomResponse(HttpStatusCode.OK, response);
         }
 
+        [HttpGet("atrasados")]
+        public async Task<ActionResult<ResultadoPaginado<EmprestimoAtrasadoResponse>>> ObterEmprestimosAtrasados(
+            int numeroPagina = 0,
+            int tamanhoPagina = 12)
+        {
+            var emprestimos = await _emprestimoService.ObterEmprestimosAtrasadosPaginados(numeroPagina, tamanhoPagina);
+
+            if (emprestimos is null || !emprestimos.Itens.Any())
+                return CustomResponse(HttpStatusCode.NotFound);
+
+            var response = new ResultadoPaginado<EmprestimoAtrasadoResponse>
+            {
+                Itens = emprestimos.Itens.Select(e => (EmprestimoAtrasadoResponse)e),
+                TotalItens = emprestimos.TotalItens,
+                NumeroPagina = emprestimos.NumeroPagina,
+                TamanhoPagina = emprestimos.TamanhoPagina
+            };
+
+            return CustomResponse(HttpStatusCode.OK, response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AdicionarEmprestimo(CreateEmprestimoRequest request)
         {

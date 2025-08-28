@@ -6,5 +6,6 @@ namespace GerenciamentoLivro.Domain.Interfaces
     {
         IQueryable<Emprestimo> ObterAtivosPorUsuario(Guid idUsuario);
         IQueryable<Emprestimo> ObterComLivroEUsuario();
+        IQueryable<Emprestimo> ObterEmprestimosAtrasados();
     }
 }

@@ -34,10 +34,37 @@ namespace GerenciamentoLivro.Domain.Services
             };
         }
 
+        public async Task<ResultadoPaginado<Emprestimo>> ObterEmprestimosAtrasadosPaginados(int numeroPagina = 0, int tamanhoPagina = 12)
+        {
+            var query = _emprestimoRepository.ObterComLivroEUsuario()
+                .Where(x => x.DataDevolucaoPrevista < DateTime.Now.Date && x.DataDevolucaoEfetiva == null);
+
+            var total = await query.CountAsync();
+            var itens = await query
+                .Skip(numeroPagina * tamanhoPagina)
+                .Take(tamanhoPagina)
+                .OrderBy(x => x.IdUsuario)
+                .ToListAsync();
+
+            return new ResultadoPaginado<Emprestimo>
+            {
+                Itens = itens,
+                TotalItens = total,
+                NumeroPagina = numeroPagina,
+                TamanhoPagina = tamanhoPagina
+            };
+        }
+
+        public async Task<IEnumerable<Emprestimo>> ObterEmprestimosAtrasados()
+        {
+            var query = _emprestimoRepository.ObterEmprestimosAtrasados().OrderBy(x => x.IdUsuario);
+            return await query.ToListAsync();
+        }
+
         public async Task<IEnumerable<Emprestimo>> ObterEmprestimosAtivos(Guid idUsuario)
         {
             var query = _emprestimoRepository.ObterAtivosPorUsuario(idUsuario);
-            return await query.ToListAsync();       
+            return await query.ToListAsync();
         }
 
         public async Task Adicionar(Emprestimo emprestimo)

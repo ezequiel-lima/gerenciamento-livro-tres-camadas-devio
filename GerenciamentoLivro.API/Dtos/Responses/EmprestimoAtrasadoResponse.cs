@@ -2,25 +2,21 @@
 
 namespace GerenciamentoLivro.API.Dtos.Responses
 {
-    public class EmprestimoResponse
+    public class EmprestimoAtrasadoResponse
     {
         public Guid IdUsuario { get; set; }
         public string? NomeUsuario { get; set; }
-        public Guid IdLivro { get; set; }
         public string? TituloLivro { get; set; }
-        public DateTime DataEmprestimo { get; set; }
         public DateTime DataDevolucaoPrevista { get; set; }
 
 
-        public static explicit operator EmprestimoResponse(Emprestimo emprestimo)
+        public static explicit operator EmprestimoAtrasadoResponse(Emprestimo emprestimo)
         {
-            return new EmprestimoResponse
+            return new EmprestimoAtrasadoResponse
             {
                 IdUsuario = emprestimo.IdUsuario,
                 NomeUsuario = emprestimo.Usuario?.Nome,
-                IdLivro = emprestimo.IdLivro,
                 TituloLivro = emprestimo.Livro?.Titulo,
-                DataEmprestimo = emprestimo.DataEmprestimo,
                 DataDevolucaoPrevista = emprestimo.DataDevolucaoPrevista
             };
         }

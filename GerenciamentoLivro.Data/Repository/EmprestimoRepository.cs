@@ -19,6 +19,15 @@ namespace GerenciamentoLivro.Data.Repository
                 .Include(x => x.Usuario);
         }
 
+        public IQueryable<Emprestimo> ObterEmprestimosAtrasados()
+        {
+            return _dbSet
+                .AsNoTracking()
+                .Include(x => x.Livro)
+                .Include(x => x.Usuario)
+                .Where(x => x.DataDevolucaoEfetiva == null && x.DataDevolucaoPrevista < DateTime.Now.Date);
+        }
+
         public IQueryable<Emprestimo> ObterAtivosPorUsuario(Guid idUsuario)
         {
             return _dbSet
