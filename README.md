@@ -2,7 +2,7 @@
 
 Este projeto consiste em uma API REST para gerenciamento de uma biblioteca, incluindo operações de cadastro, consulta, empréstimos de livros.
 
-[![API](https://img.shields.io/badge/🔗API-blue)](https://github.com/ezequiel-lima/gerenciamento-livro-loan-return-notifier-app)
+[![API](https://img.shields.io/badge/🔗API-blue)](https://github.com/ezequiel-lima/gerenciamento-livro-tres-camadas-devio)
 [![Azure Function](https://img.shields.io/badge/Azure_Function-%2300BCF2?logo=azure-functions&logoColor=white)](https://github.com/ezequiel-lima/gerenciamento-livro-loan-return-notifier-app)
 
 ---
