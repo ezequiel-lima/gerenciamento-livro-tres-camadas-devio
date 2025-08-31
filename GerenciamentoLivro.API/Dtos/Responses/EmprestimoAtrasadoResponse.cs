@@ -6,6 +6,7 @@ namespace GerenciamentoLivro.API.Dtos.Responses
     {
         public Guid IdUsuario { get; set; }
         public string? NomeUsuario { get; set; }
+        public string? EmailUsuario { get; set; }
         public string? TituloLivro { get; set; }
         public DateTime DataDevolucaoPrevista { get; set; }
 
@@ -16,6 +17,7 @@ namespace GerenciamentoLivro.API.Dtos.Responses
             {
                 IdUsuario = emprestimo.IdUsuario,
                 NomeUsuario = emprestimo.Usuario?.Nome,
+                EmailUsuario = emprestimo.Usuario?.Email,
                 TituloLivro = emprestimo.Livro?.Titulo,
                 DataDevolucaoPrevista = emprestimo.DataDevolucaoPrevista
             };
